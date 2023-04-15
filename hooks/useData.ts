@@ -33,7 +33,7 @@ export function useData<T>({url}: Props) {
     };
 
     getData();
-  }, []);
+  }, [url]);
 
   return {
     isLoading,
