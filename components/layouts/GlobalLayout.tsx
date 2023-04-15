@@ -1,13 +1,19 @@
 import React from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
+import {ButtonScreen} from '../atoms/ButtonScreen';
+import {Screens} from '../../App';
 
 interface Props {
   title: string;
+  screens: Screens[];
+  setScreen: React.Dispatch<React.SetStateAction<Screens>>;
 }
 
 export const GlobalLayout: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   title,
+  screens,
+  setScreen,
 }) => {
   return (
     <View style={styles.container}>
@@ -22,6 +28,16 @@ export const GlobalLayout: React.FC<React.PropsWithChildren<Props>> = ({
         />
       </View>
 
+      <View style={styles.screensButtonsContainer}>
+        {screens.map((screen, key) => (
+          <ButtonScreen
+            key={key}
+            title={screen}
+            onPress={() => setScreen(screen)}
+          />
+        ))}
+      </View>
+
       {children}
     </View>
   );
@@ -32,7 +48,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    padding: 20,
+    marginTop: 20,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -46,5 +63,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: '#000',
+  },
+  screensButtonsContainer: {
+    flexDirection: 'row',
+    marginVertical: 10,
   },
 });

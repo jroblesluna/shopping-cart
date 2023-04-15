@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import {GlobalLayout} from './components/layouts/GlobalLayout';
 import {useData} from './hooks/useData';
@@ -16,14 +17,57 @@ interface Post {
   body: string;
 }
 
+interface Photo {
+  albumId: number;
+  id: number;
+  title: string;
+  url: string;
+  thumbnailUrl: string;
+}
+
+interface Comment {
+  postId: number;
+  id: number;
+  name: string;
+  email: string;
+  body: string;
+}
+
+interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  phone: '1-770-736-8031 x56442';
+}
+
+export type Screens = 'posts' | 'comments' | 'photos' | 'users';
+
+const screens: Screens[] = ['posts', 'comments', 'photos', 'users'];
+
 const App = () => {
-  // https://jsonplaceholder.typicode.com/posts?_start=0&_limit=10
-  // https://jsonplaceholder.typicode.com/comments?_start=0&_limit=10
-  // https://jsonplaceholder.typicode.com/photos?_start=0&_limit=10
-  // https://jsonplaceholder.typicode.com/users?_start=0&_limit=10
-  const {data, isError, isLoading} = useData<Post>({
-    url: 'https://jsonplaceholder.typicode.com/posts?_start=0&_limit=10',
+  const [screen, setScreen] = useState<Screens>('posts');
+  const {data, isError, isLoading} = useData<{
+    id: number;
+    [key: string]: string | number;
+  }>({
+    url: `https://jsonplaceholder.typicode.com/${screen}?_start=0&_limit=10`,
   });
+
+  const getTitle = () => {
+    type Title = {
+      [key in Screens]: string;
+    };
+
+    const titulos: Title = {
+      posts: 'Posts',
+      comments: 'Comments',
+      photos: 'Photos',
+      users: 'Users',
+    };
+
+    return titulos[screen];
+  };
 
   if (isLoading) {
     return (
@@ -42,70 +86,98 @@ const App = () => {
   }
 
   return (
-    <GlobalLayout title="Posts">
+    <GlobalLayout title={getTitle()} screens={screens} setScreen={setScreen}>
       <FlatList
         data={data}
         keyExtractor={({id}, key) => `post-${id}-${key}`}
-        renderItem={({item: {title, body}}) => {
-          return (
-            <View
-              style={{
-                padding: 20,
-              }}>
-              <Text
+        renderItem={({item}) => {
+          if (screen === 'posts') {
+            return (
+              <View
                 style={{
-                  fontSize: 20,
-                  color: '#000',
+                  padding: 20,
                 }}>
-                {title}
-              </Text>
-              <Text>{body}</Text>
-            </View>
-          );
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#000',
+                  }}>
+                  {item.title}
+                </Text>
+                <Text>{item.body}</Text>
+              </View>
+            );
+          }
+
+          if (screen === 'comments') {
+            return (
+              <View
+                style={{
+                  padding: 20,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#000',
+                  }}>
+                  {item.name}
+                </Text>
+                <Text>{item.email}</Text>
+                <Text>{item.body}</Text>
+              </View>
+            );
+          }
+
+          if (screen === 'users') {
+            return (
+              <View
+                style={{
+                  padding: 20,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#000',
+                  }}>
+                  {item.name}
+                </Text>
+                <Text>{item.email}</Text>
+                <Text>{item.username}</Text>
+                <Text>{item.phone}</Text>
+                <Text>{item.body}</Text>
+              </View>
+            );
+          }
+
+          if (screen === 'photos') {
+            console.log(item.url);
+            return (
+              <View
+                style={{
+                  padding: 20,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#000',
+                  }}>
+                  {item.title}
+                </Text>
+                <Image
+                  style={styles.imagen}
+                  source={{
+                    uri: item.url as string,
+                  }}
+                />
+              </View>
+            );
+          }
+
+          return null;
         }}
       />
     </GlobalLayout>
   );
-
-  // return (
-  //   <ScrollView style={styles.container}>
-  //     <View style={styles.contenido}>
-  //       <Text style={styles.texto}>Hola Mundo desde IDAT</Text>
-  //       <Image
-  //         style={styles.imagen}
-  //         source={require('./assets/wallpaper.jpg')}
-  //         resizeMode="contain"
-  //       />
-  //       <Image
-  //         style={styles.imagen}
-  //         source={require('./assets/wallpaper.jpg')}
-  //         resizeMode="contain"
-  //       />
-  //       <TextInput
-  //         style={styles.input}
-  //         placeholder="Ingresa tu correo"
-  //         value={text}
-  //         onChangeText={texto => setText(texto)}
-  //       />
-  //       <Text>Tu texto tiene {text.length} letras</Text>
-
-  //       <Button
-  //         color="black"
-  //         onPress={() => {
-  //           Linking.openURL('instagram://user?username=apple');
-  //         }}
-  //         title="Presioname"
-  //       />
-
-  //       <TouchableOpacity
-  //         activeOpacity={0.9}
-  //         style={styles.buttonTouchable}
-  //         onPress={() => Alert.alert('hola mundo')}>
-  //         <Text style={styles.buttonTouchableText}>Presioname</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   </ScrollView>
-  // );
 };
 
 export default App;
