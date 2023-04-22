@@ -22,7 +22,6 @@ export function useData<T>({url}: Props) {
         const data = await response.json();
 
         setData(data);
-
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
