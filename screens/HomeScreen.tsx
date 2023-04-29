@@ -1,8 +1,9 @@
 import React from 'react';
 import {FlatList, ScrollView} from 'react-native';
-import {Div, Text} from 'react-native-magnus';
+import {Button, Div, Text} from 'react-native-magnus';
 import {useData} from '../hooks/useData';
 import {LoadingLayout} from '../components/layouts/LoadingLayout';
+import {Notifier, NotifierComponents} from 'react-native-notifier';
 
 const MyTodo: React.FC<{
   title: string;
@@ -36,6 +37,24 @@ export const HomeScreen = () => {
     <FlatList
       data={data}
       keyExtractor={({id}) => String(id)}
+      ListHeaderComponent={() => {
+        return (
+          <Div>
+            <Button
+              onPress={() => {
+                Notifier.showNotification({
+                  title: 'John Doe',
+                  description: 'Hello! Can you help me with notifications?',
+                  onHidden: () => console.log('Hidden'),
+                  onPress: () => console.log('Press'),
+                  Component: NotifierComponents.Notification,
+                });
+              }}>
+              Press me
+            </Button>
+          </Div>
+        );
+      }}
       renderItem={({item: {id, title, completed}}) => (
         <MyTodo title={title} completed={completed} />
       )}
