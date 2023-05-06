@@ -2,8 +2,11 @@ import React, {useEffect} from 'react';
 import {ThemeProvider} from 'react-native-magnus';
 import RNBootsplash from 'react-native-bootsplash';
 import {NotifierWrapper} from 'react-native-notifier';
-import {HomeScreen} from './screens/HomeScreen';
-import {VolumenScreen} from './screens/VolumenScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Root} from './navigation/Root';
+// import {HomeScreen} from './screens/HomeScreen';
+// import {VolumenScreen} from './screens/VolumenScreen';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -13,13 +16,17 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <NotifierWrapper>
-      <ThemeProvider>
-        <HomeScreen />
+    <GestureHandlerRootView style={{flex: 1}}>
+      <NavigationContainer>
+        <NotifierWrapper>
+          <ThemeProvider>
+            <Root />
 
-        {/* <VolumenScreen /> */}
-      </ThemeProvider>
-    </NotifierWrapper>
+            {/* <VolumenScreen /> */}
+          </ThemeProvider>
+        </NotifierWrapper>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 };
 

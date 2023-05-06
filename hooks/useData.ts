@@ -6,7 +6,7 @@ interface Props {
 
 export function useData<T>({url}: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<T[]>([]);
+  const [data, setData] = useState<T>();
   const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {

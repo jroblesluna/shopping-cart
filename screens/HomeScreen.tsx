@@ -1,33 +1,41 @@
 import React from 'react';
-import {FlatList, ScrollView} from 'react-native';
+import {FlatList, TouchableOpacity} from 'react-native';
 import {Button, Div, Text} from 'react-native-magnus';
 import {useData} from '../hooks/useData';
 import {LoadingLayout} from '../components/layouts/LoadingLayout';
-import {Notifier, NotifierComponents} from 'react-native-notifier';
+import {type NativeStackScreenProps} from '@react-navigation/native-stack';
+import {type StackRootParams} from '../navigation/Root';
 
 const MyTodo: React.FC<{
   title: string;
   completed: boolean;
-}> = ({title, completed}) => {
+  onPress: () => void;
+}> = ({title, completed, onPress}) => {
   return (
-    <Div bg="blue500" p="xl" m="md" rounded="lg">
-      <Text fontSize="2xl" fontWeight="bold" color="white">
-        {title}
-      </Text>
-      <Text color="gray200">
-        {completed ? 'Está completado' : 'No esta completado'}
-      </Text>
-    </Div>
+    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+      <Div bg="blue500" p="xl" m="md" rounded="lg">
+        <Text fontSize="2xl" fontWeight="bold" color="white">
+          {title}
+        </Text>
+        <Text color="gray200">
+          {completed ? 'Está completado' : 'No esta completado'}
+        </Text>
+      </Div>
+    </TouchableOpacity>
   );
 };
 
-export const HomeScreen = () => {
-  const {data, isError, isLoading} = useData<{
-    userId: number;
-    id: number;
-    title: string;
-    completed: boolean;
-  }>({
+interface Props extends NativeStackScreenProps<StackRootParams, 'HomeScreen'> {}
+
+export const HomeScreen: React.FC<Props> = ({navigation}) => {
+  const {data, isError, isLoading} = useData<
+    {
+      userId: number;
+      id: number;
+      title: string;
+      completed: boolean;
+    }[]
+  >({
     url: 'https://jsonplaceholder.typicode.com/todos?_start=0&_limit=500',
   });
 
@@ -42,13 +50,7 @@ export const HomeScreen = () => {
           <Div>
             <Button
               onPress={() => {
-                Notifier.showNotification({
-                  title: 'John Doe',
-                  description: 'Hello! Can you help me with notifications?',
-                  onHidden: () => console.log('Hidden'),
-                  onPress: () => console.log('Press'),
-                  Component: NotifierComponents.Notification,
-                });
+                navigation.navigate('SettingsScreen');
               }}>
               Press me
             </Button>
@@ -56,7 +58,15 @@ export const HomeScreen = () => {
         );
       }}
       renderItem={({item: {id, title, completed}}) => (
-        <MyTodo title={title} completed={completed} />
+        <MyTodo
+          title={title}
+          completed={completed}
+          onPress={() =>
+            navigation.navigate('TodoScreen', {
+              id,
+            })
+          }
+        />
       )}
     />
   );
