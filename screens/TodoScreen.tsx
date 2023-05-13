@@ -1,9 +1,10 @@
-import React from 'react';
-import {Div, Text} from 'react-native-magnus';
+import React, {useEffect} from 'react';
+import {Div, Text, Button} from 'react-native-magnus';
 import {StackRootParams} from '../navigation/Root';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useData} from '../hooks/useData';
 import {LoadingLayout} from '../components/layouts/LoadingLayout';
+import {generateRandomNumber} from '../utils/generateRandomNumber';
 
 interface Props extends NativeStackScreenProps<StackRootParams, 'TodoScreen'> {}
 
@@ -18,6 +19,14 @@ export const TodoScreen: React.FC<Props> = ({navigation, route}) => {
     url: `https://jsonplaceholder.typicode.com/todos/${id}`,
   });
 
+  useEffect(() => {
+    if (!data) return;
+
+    navigation.setOptions({
+      title: data.title,
+    });
+  }, [navigation, data]);
+
   if (isLoading || !data) return <LoadingLayout />;
 
   return (
@@ -27,6 +36,15 @@ export const TodoScreen: React.FC<Props> = ({navigation, route}) => {
       </Text>
       <Text>{data.id}</Text>
       <Text>Está completado? {data.completed ? 'Si' : 'No'}</Text>
+
+      <Button
+        onPress={() => {
+          navigation.push('TodoScreen', {
+            id: generateRandomNumber(),
+          });
+        }}>
+        Ir a un todo aleatorio
+      </Button>
     </Div>
   );
 };
