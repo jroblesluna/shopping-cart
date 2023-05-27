@@ -1,14 +1,17 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HomeScreen} from '../screens/HomeScreen';
-import {TodoScreen} from '../screens/TodoScreen';
-import {ProfileScreen} from '../screens/ProfileScreen';
-import {SettingsScreen} from '../screens/SettingsScreen';
-import {BottomTabsScreen} from '../screens/BottomTabsScreen';
+import {SilabosScreen} from '../screens/SilabosScreen';
+import {SilaboScreen} from '../screens/SilaboScreen';
+import {EditSilaboScreen} from '../screens/EditSilaboScreen';
 
 export type StackRootParams = {
-  HomeScreen: undefined;
-  BottomTabsScreen: undefined;
+  SilabosScreen: undefined;
+  SilaboScreen: {
+    id: string;
+  };
+  EditSilaboScreen: {
+    id: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<StackRootParams>();
@@ -16,33 +19,31 @@ const Stack = createNativeStackNavigator<StackRootParams>();
 export const Root: React.FC = () => {
   return (
     <Stack.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="SilabosScreen"
       screenOptions={{
         animation: 'slide_from_right',
       }}>
       <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+        name="SilabosScreen"
+        component={SilabosScreen}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name="BottomTabsScreen"
-        component={BottomTabsScreen}
+        name="SilaboScreen"
+        component={SilaboScreen}
         options={{
           headerShown: false,
         }}
       />
-      {/* <Stack.Screen
-        name="TodoScreen"
-        component={TodoScreen}
+      <Stack.Screen
+        name="EditSilaboScreen"
+        component={EditSilaboScreen}
         options={{
-          title: 'Todo',
+          headerShown: false,
         }}
       />
-      <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
     </Stack.Navigator>
   );
 };

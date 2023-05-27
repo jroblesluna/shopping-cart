@@ -5,8 +5,6 @@ import {NotifierWrapper} from 'react-native-notifier';
 import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Root} from './navigation/Root';
-// import {HomeScreen} from './screens/HomeScreen';
-// import {VolumenScreen} from './screens/VolumenScreen';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -21,8 +19,6 @@ const App: React.FC = () => {
         <NotifierWrapper>
           <ThemeProvider>
             <Root />
-
-            {/* <VolumenScreen /> */}
           </ThemeProvider>
         </NotifierWrapper>
       </NavigationContainer>
