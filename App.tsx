@@ -6,7 +6,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Root} from './navigation/Root';
 import {Provider} from 'react-redux';
-import {counterStore} from './stores/counter.store';
+// import {counterStore} from './stores/counter.store';
+import {cartStore} from './stores/cart.store';
 
 /**
  * Hackaton semana 15
@@ -32,7 +33,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <Provider store={counterStore}>
+    <Provider store={cartStore}>
       <GestureHandlerRootView style={{flex: 1}}>
         <NavigationContainer>
           <NotifierWrapper>
