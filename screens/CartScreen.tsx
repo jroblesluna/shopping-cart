@@ -3,12 +3,19 @@ import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {TabRootParams} from './Semana16';
 import {useSelector, useDispatch} from 'react-redux';
-import {Product, clear} from '../reducers/cart.reducer';
+import {Product, remove, clear} from '../reducers/cart.reducer';
 import {Image, Text, View} from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props extends BottomTabScreenProps<TabRootParams, 'CartScreen'> {}
 
 const CartItem: React.FC<{product: Product}> = ({product}) => {
+  const dispatch = useDispatch();
+
+  const handleRemoveProduct = (productId: string) => {
+    dispatch(remove({productId}));
+  };
+
   return (
     // Aquí puedes renderizar la información del producto en un componente personalizado para cada elemento de la lista
     // por ejemplo:
@@ -19,6 +26,9 @@ const CartItem: React.FC<{product: Product}> = ({product}) => {
         <Text style={styles.price}>Precio: ${product.price}</Text>
         <Text style={styles.sku}>SKU: {product.id}</Text>
       </View>
+      <TouchableOpacity onPress={() => handleRemoveProduct(product.id)}>
+        <Icon name="remove" size={30} color="black" />
+      </TouchableOpacity>
     </View>
   );
 };
