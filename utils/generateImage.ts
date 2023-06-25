@@ -1,2 +1,4 @@
-export const generateImage = (id: string) =>
-  `https://picsum.photos/200?id=${id}`;
+export const generateImage = () => {
+  const id = Date.now().toString();
+  return `https://picsum.photos/200?id=${id}`;
+};
